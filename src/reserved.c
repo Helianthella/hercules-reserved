@@ -40,6 +40,7 @@ HPExport struct hplugin_info pinfo = {
 
 static bool enable_name_reservation = true;
 static char *char_reservation_db = NULL;
+#define DEFAULT_TABLE_NAME "char_reservation"
 
 
 /**
@@ -84,12 +85,12 @@ static int check_char_name_post (int retVal, const char *name, const char *esc_n
 }
 
 
-void config_check_sql_reservation (const char *key __attribute__ ((unused)), const char *val)
+static void config_check_sql_reservation (const char *key __attribute__ ((unused)), const char *val)
 {
 	enable_name_reservation = config_switch(val) ? true : false;
 }
 
-void config_char_reservation_db (const char *key __attribute__ ((unused)), const char *val)
+static void config_char_reservation_db (const char *key __attribute__ ((unused)), const char *val)
 {
 	if (char_reservation_db != NULL)
 		aFree(char_reservation_db);
@@ -97,11 +98,11 @@ void config_char_reservation_db (const char *key __attribute__ ((unused)), const
 	char_reservation_db = aStrdup(val);
 }
 
-static void defaults ()
+static void defaults (void)
 {
 	if (char_reservation_db == NULL) {
 		CREATE(char_reservation_db, char, 17);
-		safestrncpy(char_reservation_db, "char_reservation", 17);
+		safestrncpy(char_reservation_db, DEFAULT_TABLE_NAME, 17);
 	}
 }
 
